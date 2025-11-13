@@ -1,3 +1,6 @@
+@import './styles/variables.css';
+@import './styles/utilities.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
