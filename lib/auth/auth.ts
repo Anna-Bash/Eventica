@@ -16,10 +16,16 @@ if (!SECRET) {
   );
 }
 
-export function createSessionToken(user: { id: string; email: string }) {
+export function createSessionToken(user: {
+  id: string;
+  email: string;
+  name?: string;
+}) {
   return createToken({ user, iat: Date.now() }, SECRET);
 }
 
 export function verifySessionToken(token: string) {
-  return verifyToken(token, SECRET) as { user: { id: string; email: string } } | null;
+  return verifyToken(token, SECRET) as
+    | { user: { id: string; email: string; name?: string } }
+    | null;
 }

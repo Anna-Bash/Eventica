@@ -1,3 +1,5 @@
+import { verifyPassword } from './users';
+
 export type AuthCredentials = {
   email: string;
   password: string;
@@ -11,17 +13,15 @@ export type UserProfile = {
 };
 
 export async function verifyCredentials(credentials: AuthCredentials) {
-  // TODO: replace with real user lookup
-  const isValid = credentials.email === 'admin@example.com' && credentials.password === 'password';
-
-  if (!isValid) {
+  const user = await verifyPassword(credentials.email, credentials.password);
+  if (!user) {
     return null;
   }
 
   return {
-    id: '1',
-    email: credentials.email,
-    name: 'Admin User',
-    role: 'admin' as const,
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
   };
 }

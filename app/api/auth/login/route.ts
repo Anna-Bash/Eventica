@@ -12,9 +12,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
 
-  const token = createSessionToken({ id: user.id, email: user.email });
+  const token = createSessionToken({ id: user.id, email: user.email, name: user.name });
 
-  const res = NextResponse.json({ authenticated: true, user: { id: user.id, email: user.email } });
+  const res = NextResponse.json({ authenticated: true, user: { id: user.id, email: user.email, name: user.name } });
   res.cookies.set({
     name: SESSION_COOKIE_NAME,
     value: token,

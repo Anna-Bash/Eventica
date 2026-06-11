@@ -13,7 +13,9 @@ export function getSession() {
   const token = cookies().get('app-session')?.value;
   if (!token) return null;
 
-  const payload = verifyToken(token, SECRET) as { user?: { id: string; email: string } } | null;
+  const payload = verifyToken(token, SECRET) as
+    | { user?: { id: string; email: string; name?: string } }
+    | null;
   if (!payload || !payload.user) return null;
 
   return {

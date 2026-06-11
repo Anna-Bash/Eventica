@@ -1,12 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Menu, X, MapPin, Search } from "lucide-react";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<{ name?: string; email?: string } | null>(null);
+  const currentPath =
+    typeof window !== 'undefined'
+      ? `${window.location.pathname}${window.location.search}`
+      : '/';
+
+  useEffect(() => {
+    let active = true;
+
+    async function fetchUser() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!active) return;
+        if (!res.ok) {
+          setUser(null);
+          return;
+        }
+
+        const data = await res.json();
+        setUser(data?.authenticated ? data.user : null);
+      } catch {
+        if (active) {
+          setUser(null);
+        }
+      }
+    }
+
+    fetchUser();
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const initials = user
+    ? (user.name ?? user.email ?? '')
+        .split(' ')
+        .map((part) => part[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join('')
+        .toUpperCase()
+    : '';
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -51,7 +94,7 @@ export function Header() {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             <Button variant="ghost" size="sm" className="gap-2">
               <MapPin className="h-4 w-4" />
               <span>San Francisco</span>
@@ -59,7 +102,20 @@ export function Header() {
             <Button variant="ghost" size="icon">
               <Search className="h-4 w-4" />
             </Button>
-            <Button>Get Started</Button>
+            {user ? (
+              <Avatar className="h-9 w-9">
+                <AvatarFallback>{initials || "UN"}</AvatarFallback>
+              </Avatar>
+            ) : (
+              <>
+                <Button asChild variant="ghost" size="sm">
+                  <Link href={`/login?returnTo=${encodeURIComponent(currentPath)}`}>Login</Link>
+                </Button>
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/register?returnTo=${encodeURIComponent(currentPath)}`}>Sign Up</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -112,7 +168,22 @@ export function Header() {
                   <MapPin className="h-4 w-4" />
                   <span>San Francisco</span>
                 </Button>
-                <Button>Get Started</Button>
+                {user ? (
+                  <div className="flex items-center justify-center py-2">
+                    <Avatar className="h-9 w-9">
+                      <AvatarFallback>{initials || "UN"}</AvatarFallback>
+                    </Avatar>
+                  </div>
+                ) : (
+                  <>
+                    <Button asChild variant="ghost" className="w-full">
+                      <Link href={`/login?returnTo=${encodeURIComponent(currentPath)}`}>Login</Link>
+                    </Button>
+                    <Button asChild variant="outline" className="w-full">
+                      <Link href={`/register?returnTo=${encodeURIComponent(currentPath)}`}>Sign Up</Link>
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
