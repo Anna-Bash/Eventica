@@ -3,8 +3,42 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, Calendar, Sparkles } from "lucide-react";
+import Image from "next/image";
+import {
+  StoryblokRichText,
+  type StoryblokRichTextInput,
+  type StoryblokReactRichTextProps,
+} from "@storyblok/react";
+import { StoryblokLink, type StoryblokLinkProps } from "@/lib/storyblok-link";
 
-export function Hero() {
+//create a
+
+type StoryblokImage = {
+  filename: string;
+  alt?: string;
+  title?: string;
+  copyright?: string;
+  focus?: string;
+};
+
+type HeroProps = {
+  blok: {
+    heading: string | StoryblokRichTextInput;
+    text: string | StoryblokRichTextInput;
+    image?: StoryblokImage;
+    eyebrow?: string;
+    button_text?: string;
+    button_link?: StoryblokLinkProps["link"];
+  };
+};
+
+function InlineRichTextParagraph({
+  children,
+}: StoryblokReactRichTextProps<"paragraph">) {
+  return <>{children}</>;
+}
+
+export default function Hero({ blok }: Readonly<HeroProps>) {
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-16">
       {/* Background Pattern */}
@@ -19,20 +53,46 @@ export function Hero() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-8">
             <Sparkles className="h-4 w-4" />
-            <span className="text-sm font-medium">Discover what&apos;s happening around you</span>
+            <span className="hero-eyebrow text-sm font-medium">{blok.eyebrow}</span>
           </div>
 
           {/* Heading */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight font-[family-name:var(--font-heading)] text-balance">
-            What should we do{" "}
-            <span className="text-primary">this weekend?</span>
+            {typeof blok.heading === "string" ? (
+              blok.heading
+            ) : (
+              <StoryblokRichText
+                document={blok.heading}
+                wrapper={false}
+                components={{ paragraph: InlineRichTextParagraph }}
+              />
+            )}
           </h1>
 
           {/* Subheading */}
-          <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
-            Turn that question into an exciting exploration. Discover local events, 
-            activities, performances, and festivals tailored for your family.
-          </p>
+          <div className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto text-pretty">
+            {typeof blok.text === "string" ? (
+              blok.text
+            ) : (
+              <StoryblokRichText document={blok.text} />
+            )}
+          </div>
+
+          {blok.image && (
+            <Image
+              src={blok.image.filename}
+              alt={blok.image.alt ?? ""}
+              width={800}
+              height={500}
+            />
+          )}
+
+          {blok.button_text && blok.button_link && (
+            <StoryblokLink link={blok.button_link} className="mt-8 inline-block">
+              <Button size="lg">{blok.button_text}</Button>
+            </StoryblokLink>
+          )}
+
 
           {/* Search Bar */}
           <div className="mt-10 max-w-2xl mx-auto">

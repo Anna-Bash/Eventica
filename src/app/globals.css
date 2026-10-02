@@ -43,3 +43,8 @@ a {
     color-scheme: dark;
   }
 }
+
+
+.highlight {
+  color: var(--color-primary);
+}

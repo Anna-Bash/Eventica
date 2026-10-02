@@ -54,14 +54,9 @@ const socialLinks = [
 ];
 
 const cities = [
-  "San Francisco",
-  "Los Angeles",
-  "New York",
-  "Chicago",
-  "Seattle",
-  "Austin",
-  "Denver",
-  "Miami",
+  "Rastatt",
+  "Karlsruhe",
+  "Baden-Baden"
 ];
 
 export function Footer() {

@@ -54,7 +54,7 @@ export function Header() {
           <div className="hidden md:flex items-center gap-4">
             <Button variant="ghost" size="sm" className="gap-2">
               <MapPin className="h-4 w-4" />
-              <span>San Francisco</span>
+              <span>Rastatt</span>
             </Button>
             <Button variant="ghost" size="icon">
               <Search className="h-4 w-4" />
@@ -110,7 +110,7 @@ export function Header() {
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 <Button variant="outline" className="gap-2 justify-start">
                   <MapPin className="h-4 w-4" />
-                  <span>San Francisco</span>
+                  <span>Rastatt</span>
                 </Button>
                 <Button>Get Started</Button>
               </div>
